@@ -1,4 +1,4 @@
-class Employee {
+abstract class Employee {
 
   private final String firstName;
   private final String lastName;
@@ -14,9 +14,11 @@ class Employee {
     this.socialSecurityNumber = socialSecurityNumber;
   }
 
+  public abstract double earnings();
+
   public String toString() {
     return String.format(
-      "%s %s\nsocial security number: %s",
+      "%s %s\nSocial Security Number: %s",
       firstName,
       lastName,
       socialSecurityNumber
@@ -24,105 +26,74 @@ class Employee {
   }
 }
 
-class CommissionEmployee extends Employee {
+class SalariedEmployee extends Employee {
 
-  private double grossSales;
-  private double commissionRate;
+  private final double weeklySalary;
 
-  public CommissionEmployee(
+  public SalariedEmployee(
     String firstName,
     String lastName,
     String socialSecurityNumber,
-    double grossSales,
-    double commissionRate
+    double weeklySalary
   ) {
     super(firstName, lastName, socialSecurityNumber);
-    this.grossSales = grossSales;
-    this.commissionRate = commissionRate;
+    this.weeklySalary = weeklySalary;
   }
 
   public double earnings() {
-    return commissionRate * grossSales;
+    return weeklySalary;
   }
 
   public String toString() {
     return String.format(
-      "Commission Employee: %s\nGross Sales: %.2f\nCommission Rate: %.2f",
+      "Salaried Employee: %s\nWeekly Salary: $%,.2f",
       super.toString(),
-      grossSales,
-      commissionRate
+      earnings()
     );
   }
 }
 
-class BasePlusCommissionEmployee extends CommissionEmployee {
+class PieceWorker extends Employee {
 
-  private double baseSalary;
+  private double wage;
+  private int pieces;
 
-  public BasePlusCommissionEmployee(
+  public PieceWorker(
     String firstName,
     String lastName,
     String socialSecurityNumber,
-    double grossSales,
-    double commissionRate,
-    double baseSalary
+    double wage,
+    int pieces
   ) {
-    super(
-      firstName,
-      lastName,
-      socialSecurityNumber,
-      grossSales,
-      commissionRate
-    );
-    this.baseSalary = baseSalary;
+    super(firstName, lastName, socialSecurityNumber);
+    this.wage = wage;
+    this.pieces = pieces;
   }
 
   public double earnings() {
-    return baseSalary + super.earnings();
+    return wage * pieces;
   }
 
   public String toString() {
     return String.format(
-      "Base-Salaried %s\nBase Salary: %.2f",
+      "Piece Worker: %s\nWage per piece: $%,.2f; Pieces produced: %d",
       super.toString(),
-      baseSalary
+      wage,
+      pieces
     );
   }
 }
 
-class EmployeeTest {
+class PayrollSystemTest {
 
   public static void main(String[] args) {
-    CommissionEmployee commissionEmployee = new CommissionEmployee(
-      "Sue",
-      "Jones",
-      "333-33-3333",
-      10000.0,
-      0.06
-    );
-    BasePlusCommissionEmployee basePlusCommissionEmployee = new BasePlusCommissionEmployee(
-      "Bob",
-      "Lewis",
-      "444-44-4444",
-      5000.0,
-      0.04,
-      300.0
-    );
+    Employee[] employees = new Employee[4];
+    employees[0] = new SalariedEmployee("John", "Smith", "111-11-1111", 800.00);
+    employees[3] = new PieceWorker("Bob", "Lewis", "444-44-4444", 2.5, 200);
 
-    System.out.println("Employees processed individually:\n");
-
-    System.out.printf(
-      "%s\n%s: $%,.2f\n\n",
-      commissionEmployee.toString(),
-      "Earned",
-      commissionEmployee.earnings()
-    );
-
-    System.out.printf(
-      "%s\n%s: $%,.2f\n\n",
-      basePlusCommissionEmployee.toString(),
-      "Earned",
-      basePlusCommissionEmployee.earnings()
-    );
+    for (Employee currentEmployee : employees) {
+      System.out.println(currentEmployee);
+      System.out.printf("Earned $%,.2f\n\n", currentEmployee.earnings());
+    }
   }
 }
