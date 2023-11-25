@@ -1,27 +1,26 @@
-import java.util.Scanner;
-
 public class N15 {
 
-  public static double hypotenuse(double side1, double side2) {
-    return Math.sqrt(Math.pow(side1, 2) + Math.pow(side2, 2));
-  }
-
   public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
+    int arraySize;
 
-    System.out.print("Enter the length of side1: ");
-    double side1 = scanner.nextDouble();
+    if (args.length > 0) {
+      try {
+        arraySize = Integer.parseInt(args[0]);
+      } catch (NumberFormatException e) {
+        System.out.println(
+          "Invalid integer command-line argument. Using default size 10."
+        );
+        arraySize = 10;
+      }
+    } else {
+      arraySize = 10;
+    }
 
-    System.out.print("Enter the length of side2: ");
-    double side2 = scanner.nextDouble();
+    int[] array = new int[arraySize];
 
-    double hypotenuse = hypotenuse(side1, side2);
-
-    System.out.printf(
-      "The hypotenuse of the right triangle is: %.2f\n",
-      hypotenuse
-    );
-
-    scanner.close();
+    for (int i = 0; i < array.length; i++) {
+      array[i] = i + 1;
+      System.out.print(array[i] + " ");
+    }
   }
 }
